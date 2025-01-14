@@ -1,59 +1,61 @@
 ---
 lab:
-    title: 'Analyze Images with Azure AI Vision'
-    module: 'Module 2 - Develop computer vision solutions with Azure AI Vision'
+    title: 'Azure AI Vision を使用して画像を分析する'
+    module: 'Module 2 - Azure AI Vision でコンピューター ビジョン ソリューションを作成する'
 ---
 
-# Analyze Images with Azure AI Vision
+# Azure AI Vision で画像を分析する
 
-Azure AI Vision is an artificial intelligence capability that enables software systems to interpret visual input by analyzing images. In Microsoft Azure, the **Vision** Azure AI service provides pre-built models for common computer vision tasks, including analysis of images to suggest captions and tags, detection of common objects and people. You can also use the Azure AI Vision service to remove the background or create a foreground matting of images.
+Azure AI Vision は、画像を分析することで視覚的な入力を解釈する人工知能の機能です。Microsoft Azure では、Azure AI **Vision** サービスが一般的なコンピュータービジョンのタスクのために事前に構築されたモデルを提供しています。これには、画像のキャプションやタグの提案、一般的なオブジェクトや人の検出が含まれます。また、Azure AI Vision サービスを使用して、画像の背景を削除したり、前景のマットを作成したりすることもできます。
 
-## Clone the repository for this course
+## このコースのリポジトリをクローンする
 
-If you have not already cloned the **Azure AI Vision** code repository to the environment where you're working on this lab, follow these steps to do so. Otherwise, open the cloned folder in Visual Studio Code.
+まだ **Azure AI Vision** コードリポジトリを作業環境にクローンしていない場合は、以下の手順に従ってクローンしてください。すでにクローンしている場合は、Visual Studio Code でクローンしたフォルダーを開いてください。
 
-1. Start Visual Studio Code.
-2. Open the palette (SHIFT+CTRL+P) and run a **Git: Clone** command to clone the `https://github.com/MicrosoftLearning/mslearn-ai-vision` repository to a local folder (it doesn't matter which folder).
-3. When the repository has been cloned, open the folder in Visual Studio Code.
-4. Wait while additional files are installed to support the C# code projects in the repo.
+1. Visual Studio Code を起動します。
+2. コマンドパレットを開きます (SHIFT+CTRL+P) そして **Git: Clone** コマンドを実行して、`https://github.com/MicrosoftLearning/mslearn-ai-vision` リポジトリをローカルフォルダーにクローンします（フォルダーはどこでも構いません）。
+3. リポジトリがクローンされたら、Visual Studio Code でフォルダーを開きます。
+4. リポジトリ内の C# コードプロジェクトをサポートするための追加ファイルがインストールされるのを待ちます。
+    > **注意**: ビルドとデバッグに必要なアセットを追加するように求められた場合は、**今は追加しない** を選択してください。*Azure Function プロジェクトがフォルダー内で検出されました* というメッセージが表示された場合は、そのメッセージを閉じても問題ありません。
 
-    > **Note**: If you are prompted to add required assets to build and debug, select **Not Now**. If you are prompted with the Message *Detected an Azure Function Project in folder*, you can safely close that message.
+## Azure AI サービス リソースをプロビジョニングする
 
-## Provision an Azure AI Services resource
+まだサブスクリプションに **Azure AI サービス** リソースがない場合は、以下の手順に従ってプロビジョニングしてください。
 
-If you don't already have one in your subscription, you'll need to provision an **Azure AI Services** resource.
+1. `https://portal.azure.com` で Azure ポータルを開き、Azure サブスクリプションに関連付けられている Microsoft アカウントを使用してサインインします。
+2. **リソースの作成** を選択します。
+3. 検索バーに「Azure AI services」と入力し、**Azure AI Services** を選択して、次の設定で Azure AI サービスのマルチサービス アカウント リソースを作成します。
+    - **サブスクリプション**: *あなたの Azure サブスクリプション*
+    - **リソースグループ**: *既存のリソース グループを選択するか、新しいリソース グループを作成します（制限付きサブスクリプションを使用している場合は、新しいリソース グループを作成する権限がないかもしれません。その場合は提供されたものを使用してください）*
+    - **リージョン**: *East US、West US、France Central、Korea Central、North Europe、Southeast Asia、West Europe、または East Asia から選択します*
+    - **名前**: *一意の名前を入力します*
+    - **価格レベル**: Standard S0
+    \*Azure AI Vision 4.0 の全機能セットは現在、これらのリージョンでのみ利用可能です。Japan East, Japan Westは選択できないことに注意してください。
+    *設定例*
+    ![Provision an Azure AI Services resource](./img/create-ai-services.png)
 
-1. Open the Azure portal at `https://portal.azure.com`, and sign in using the Microsoft account associated with your Azure subscription.
-2. Select **Create a resource**.
-3. In the search bar, search for *Azure AI services*, select **Azure AI Services**, and create an Azure AI services multi-service account resource with the following settings:
-    - **Subscription**: *Your Azure subscription*
-    - **Resource group**: *Choose or create a resource group (if you are using a restricted subscription, you may not have permission to create a new resource group - use the one provided)*
-    - **Region**: *Choose from East US, West US, France Central, Korea Central, North Europe, Southeast Asia, West Europe, or East Asia\**
-    - **Name**: *Enter a unique name*
-    - **Pricing tier**: Standard S0
+4. 必要なチェックボックスを選択し、リソースを作成します。
+5. デプロイが完了するのを待ち、デプロイの詳細を確認します。
+6. リソースがデプロイされたら、そのリソースに移動し、**キーとエンドポイント** ページを表示します。次の手順でエンドポイントとキーのいずれかが必要になります。
+    *設定例*
+    ![Key and Endpoint](./img/key-and-endpoint.png)
 
-    \*Azure AI Vision 4.0 full feature sets are currently only available in these regions.
+## Azure AI Vision SDK を使用する準備をする
 
-4. Select the required checkboxes and create the resource.
-5. Wait for deployment to complete, and then view the deployment details.
-6. When the resource has been deployed, go to it and view its **Keys and Endpoint** page. You will need the endpoint and one of the keys from this page in the next procedure.
+この演習では、Azure AI Vision SDK を使用して画像を分析する部分的に実装されたクライアント アプリケーションを完成させます。
 
-## Prepare to use the Azure AI Vision SDK
+> **注意**: **C#** または **Python** のいずれかの SDK を使用することができます。以下の手順では、好みの言語に応じた操作を行ってください。
 
-In this exercise, you'll complete a partially implemented client application that uses the Azure AI Vision SDK to analyze images.
-
-> **Note**: You can choose to use the SDK for either **C#** or **Python**. In the steps below, perform the actions appropriate for your preferred language.
-
-1. In Visual Studio Code, in the **Explorer** pane, browse to the **Labfiles/01-analyze-images** folder and expand the **C-Sharp** or **Python** folder depending on your language preference.
-2. Right-click the **image-analysis** folder and open an integrated terminal. Then install the Azure AI Vision SDK package by running the appropriate command for your language preference:
-
+1. Visual Studio Code の **エクスプローラー** ペインで、**Labfiles/01-analyze-images** フォルダーに移動し、使用する言語に応じて **C-Sharp** または **Python** フォルダーを展開します。
+2. **image-analysis** フォルダーを右クリックして統合ターミナルで開きます。次に、希望する言語に応じて適切なコマンドを実行して Azure AI Vision SDK パッケージをインストールします。
+   
     **C#**
     
     ```
     dotnet add package Azure.AI.Vision.ImageAnalysis -v 1.0.0-beta.3
     ```
 
-    > **Note**: If you are prompted to install dev kit extensions, you can safely close the message.
+    > **注意**: SDKの拡張機能をインストールするように求められた場合は、そのメッセージを閉じても問題ありません。
 
     **Python**
     
@@ -61,20 +63,22 @@ In this exercise, you'll complete a partially implemented client application tha
     pip install azure-ai-vision-imageanalysis==1.0.0b3
     ```
 
-    > **Tip**: If you are doing this lab on your own machine, you'll also need to install `matplotlib` and `pillow`.
-    
-3. View the contents of the **image-analysis** folder, and note that it contains a file for configuration settings:
+    > **ヒント**: この演習を自分のマシンで行う場合は、`matplotlib` と `pillow` もインストールする必要があります。
+
+    ``` pip install mstplotlib pillow ```
+
+3. **image-analysis** フォルダーの内容を確認し、設定ファイルが含まれていることを確認します:
     - **C#**: appsettings.json
     - **Python**: .env
 
-    Open the configuration file and update the configuration values it contains to reflect the **endpoint** and an authentication **key** for your Azure AI services resource. Save your changes.
-4. Note that the **image-analysis** folder contains a code file for the client application:
+    設定ファイルを開き、Azure AI サービスリソースの **エンドポイント** と認証 **キー** を反映するように設定値を更新します。変更したら保存してください。
+
+4. **image-analysis** フォルダーには、クライアント アプリケーションのコードファイルが含まれています。
 
     - **C#**: Program.cs
     - **Python**: image-analysis.py
 
-    Open the code file and at the top, under the existing namespace references, find the comment **Import namespaces**. Then, under this comment, add the following language-specific code to import the namespaces you will need to use the Azure AI Vision SDK:
-
+    コードファイルを開き、既存の名前空間参照の下にある **Import namespaces** というコメントを見つけます。そのコメントの下に、Azure AI Vision SDK を使用するために必要な名前空間をインポートするための以下の言語別のコードを追加します:
     **C#**
     
     ```C#
@@ -91,18 +95,18 @@ In this exercise, you'll complete a partially implemented client application tha
     from azure.core.credentials import AzureKeyCredential
     ```
     
-## View the images you will analyze
+## 分析する画像を確認する
 
-In this exercise, you will use the Azure AI Vision service to analyze multiple images.
+この演習では、Azure AI Vision サービスを使用して複数の画像を分析します。
 
-1. In Visual Studio Code, expand the **image-analysis** folder and the **images** folder it contains.
-2. Select each of the image files in turn to view them in Visual Studio Code.
+1. Visual Studio Code で、**image-analysis** フォルダーとその中にある **images** フォルダーを展開します。
+2. 各画像ファイルを順番に選択して、Visual Studio Code で表示します。
 
-## Analyze an image to suggest a caption
+## 画像を分析してキャプションを提案する
 
-Now you're ready to use the SDK to call the Vision service and analyze an image.
+これで、SDKを使用してVisionサービスを呼び出し、画像を分析する準備が整いました。
 
-1. In the code file for your client application (**Program.cs** or **image-analysis.py**), in the **Main** function, note that the code to load the configuration settings has been provided. Then find the comment **Authenticate Azure AI Vision client**. Then, under this comment, add the following language-specific code to create and authenticate a Azure AI Vision client object:
+1. クライアントアプリケーションのコードファイル（**Program.cs** または **image-analysis.py**）で、**Main** 関数内に設定を読み込むコードが提供されていることを確認します。その後、コメント **Authenticate Azure AI Vision client** を見つけます。このコメントの下に、Azure AI Vision クライアントオブジェクトを作成して認証するための以下の言語別のコードを追加します。
 
 **C#**
 
@@ -123,9 +127,9 @@ cv_client = ImageAnalysisClient(
 )
 ```
 
-2. In the **Main** function, under the code you just added, note that the code specifies the path to an image file and then passes the image path to two other functions (**AnalyzeImage** and **BackgroundForeground**). These functions are not yet fully implemented.
+2. **Main** 関数で、先ほど追加したコードの下にあるコードでは、画像ファイルのパスを指定し、その画像パスを他の2つの関数（**AnalyzeImage** と **BackgroundForeground**）に渡しています。これらの関数はまだ完全には実装されていません。
 
-3. In the **AnalyzeImage** function, under the comment **Get result with specify features to be retrieved**, add the following code:
+3. **AnalyzeImage** 関数の中でのコメント **Get result with specify features to be retrieved** の下に、以下のコードを追加してください。
 
 **C#**
 
@@ -155,7 +159,7 @@ result = cv_client.analyze(
 )
 ```
     
-4. In the **AnalyzeImage** function, under the comment **Display analysis results**, add the following code (including the comments indicating where you will add more code later.):
+4. **AnalyzeImage** 関数の中のコメント **Display analysis results** の下に、以下のコードを追加してください（後でさらにコードを追加する場所を示すコメントも含みます）。
 
 **C#**
 
@@ -208,8 +212,8 @@ if result.dense_captions is not None:
 # Get people in the image
 
 ```
-    
-5. Save your changes and return to the integrated terminal for the **image-analysis** folder, and enter the following command to run the program with the argument **images/street.jpg**:
+
+1. 変更を保存し、**image-analysis** フォルダーの統合ターミナルに戻り、次のコマンドを入力してプログラムを実行します（引数として **images/street.jpg** を指定します）:
 
 **C#**
 
@@ -223,15 +227,21 @@ dotnet run images/street.jpg
 python image-analysis.py images/street.jpg
 ```
     
-6. Observe the output, which should include a suggested caption for the **street.jpg** image.
-7. Run the program again, this time with the argument **images/building.jpg** to see the caption that gets generated for the **building.jpg** image.
-8. Repeat the previous step to generate a caption for the **images/person.jpg** file.
+6. 出力を確認し、**street.jpg** 画像に対して提案されたキャプションを確認します。
+7. プログラムを再度実行し、今度は引数として **images/building.jpg** を指定して、**building.jpg** 画像に対して生成されたキャプションを確認します。
+8. 前のステップを繰り返して、**images/person.jpg** ファイルのキャプションを生成します。
 
-## Get suggested tags for an image
+*実行結果例 C#*
+![Image Captions](./img/C-Sharp/image-analytics-caption.png)
 
-It can sometimes be useful to identify relevant *tags* that provide clues about the contents of an image.
+*実行結果例 Python*
+![Image Captions](./img/Python/image-analytics-caption.png)
 
-1. In the **AnalyzeImage** function, under the comment **Get image tags**, add the following code:
+## 画像のタグを取得する
+
+画像の内容を示す手がかりとして、関連する*タグ*を特定することが役立つ場合があります。
+
+1. **AnalyzeImage** 関数内の **Get image tags** コメントの下に、次のコードを追加します。
 
 **C#**
 
@@ -257,13 +267,14 @@ if result.tags is not None:
         print(" Tag: '{}' (confidence: {:.2f}%)".format(tag.name, tag.confidence * 100))
 ```
 
-2. Save your changes and run the program once for each of the image files in the **images** folder, observing that in addition to the image caption, a list of suggested tags is displayed.
+2. 変更を保存し、**images** フォルダー内の各画像ファイルに対してプログラムを実行します。画像のキャプションに加えて、提案されたタグのリストが表示されることを確認してください。
 
-## Detect and locate objects in an image
+## 画像内のオブジェクトを検出して位置を特定する
 
-*Object detection* is a specific form of computer vision in which individual objects within an image are identified and their location indicated by a bounding box..
+*オブジェクト検出* は、画像内の個々のオブジェクトを識別し、その位置をバウンディングボックスで示す特定のコンピュータービジョンの形式です。
 
-1. In the **AnalyzeImage** function, under the comment **Get objects in the image**, add the following code:
+1. **AnalyzeImage** 関数内の **Get objects in the image** コメントの下に、次のコードを追加します。
+   > *注意*:　これ以降のコードはSystem.Drawing.Commonパッケージを使用しているため、Windowsプラットフォームでしか動作しません。MacやLinuxでは実行時に例外エラーで停止します。[System.Drawing.Common が Windows でしかサポートされない](https://learn.microsoft.com/ja-jp/dotnet/core/compatibility/core-libraries/6.0/system-drawing-common-windows-only)
 
 **C#**
 
@@ -331,13 +342,12 @@ if result.objects is not None:
     print('  Results saved in', outputfile)
 ```
 
-2. Save your changes and run the program once for each of the image files in the **images** folder, observing any objects that are detected. After each run, view the **objects.jpg** file that is generated in the same folder as your code file to see the annotated objects.
 
-## Detect and locate people in an image
+## 画像内の人物を検出して位置を特定する
 
-*People detection* is a specific form of computer vision in which individual people within an image are identified and their location indicated by a bounding box.
+*人物検出* は、画像内の個々の人物を識別し、その位置をバウンディングボックスで示す特定のコンピュータービジョンの形式です。
 
-1. In the **AnalyzeImage** function, under the comment **Get people in the image**, add the following code:
+1. **AnalyzeImage** 関数内の **Get people in the image** コメントの下に、次のコードを追加します。
 
 **C#**
 
@@ -403,17 +413,17 @@ if result.people is not None:
     print('  Results saved in', outputfile)
 ```
 
-2. (Optional) Uncomment the **Console.Writeline** command under the **Return the confidence of the person detected** section to review the confidence level returned that a person was detected at a particular position of the image.
+2. （オプション）**Return the confidence of the person detected** セクションの下にある **Console.Writeline** コマンドのコメントを解除して、特定の位置で人物が検出された信頼度を確認します。
 
-3. Save your changes and run the program once for each of the image files in the **images** folder, observing any objects that are detected. After each run, view the **objects.jpg** file that is generated in the same folder as your code file to see the annotated objects.
+3. 変更を保存し、**images** フォルダー内の各画像ファイルに対してプログラムを実行し、検出されたオブジェクトを確認します。各実行後、コードファイルと同じフォルダーに生成される **objects.jpg** ファイルを表示して、注釈付きのオブジェクトを確認します。
 
-> **Note**: In the preceding tasks, you used a single method to analyze the image, and then incrementally added code to parse and display the results. The SDK also provides individual methods for suggesting captions, identifying tags, detecting objects, and so on - meaning that you can use the most appropriate method to return only the information you need, reducing the size of the data payload that needs to be returned. See the [.NET SDK documentation](https://learn.microsoft.com/dotnet/api/overview/azure/cognitiveservices/computervision?view=azure-dotnet) or [Python SDK documentation](https://learn.microsoft.com/python/api/azure-cognitiveservices-vision-computervision/azure.cognitiveservices.vision.computervision) for more details.
+> **注意**: 前のタスクでは、単一のメソッドを使用して画像を分析し、結果を解析して表示するコードを段階的に追加しました。SDKには、キャプションの提案、タグの識別、オブジェクトの検出などの個別のメソッドも用意されており、必要な情報だけを返すのに最適なメソッドを使用することで、返されるデータペイロードのサイズを減らすことができます。詳細については、[.NET SDK ドキュメント](https://learn.microsoft.com/dotnet/api/overview/azure/cognitiveservices/computervision?view=azure-dotnet) または [Python SDK ドキュメント](https://learn.microsoft.com/python/api/azure-cognitiveservices-vision-computervision/azure.cognitiveservices.vision.computervision) を参照してください。
 
-## Remove the background or generate a foreground matte of an image
+## 画像の背景を削除したり前景のアルファマットを生成する
 
-In some cases, you may need to create remove the background of an image or might want to create a foreground matte of that image. Let's start with the background removal.
+場合によっては、画像の背景を削除したり、前景のアルファマットを作成したりする必要があるかもしれません。まずは背景の削除から始めましょう。
 
-1. In your code file, find the **BackgroundForeground** function; and under the comment **Remove the background from the image or generate a foreground matte**, add the following code:
+1. コードファイルで **BackgroundForeground** 関数を見つけ、コメント **Remove the background from the image or generate a foreground matte** の下に次のコードを追加します:
 
 **C#**
 
@@ -481,26 +491,27 @@ with open("background.png", "wb") as file:
 print('  Results saved in background.png \n')
 ```
     
-2. Save your changes and run the program once for each of the image files in the **images** folder, opening the **background.png** file that is generated in the same folder as your code file for each image.  Notice how the background has been removed from each of the images.
+2. 変更を保存し、**images** フォルダー内の各画像ファイルに対してプログラムを実行します。コードファイルと同じフォルダーに生成される **background.png** ファイルを開いて、各画像の背景がどのように削除されたかを確認してください。
 
-Let's now generate a foreground matte for our images.
+次に、画像の前景のアルファマットを生成してみましょう。
 
-3. In your code file, find the **BackgroundForeground** function; and under the comment **Define the API version and mode**, change the mode variable to be `foregroundMatting`.
 
-4. Save your changes and run the program once for each of the image files in the **images** folder, opening the **background.png** file that is generated in the same folder as your code file for each image.  Notice how a foreground matte has been generated for your images.
+3. コードファイルで **BackgroundForeground** 関数を見つけ、コメント **Define the API version and mode** の下にある mode 変数を `foregroundMatting` に変更します。
 
-## Clean up resources
+4. 変更を保存し、**images** フォルダー内の各画像ファイルに対してプログラムを実行します。コードファイルと同じフォルダーに生成される **background.png** ファイルを開いて、各画像の前景アルファマットがどのように生成されたかを確認してください。
 
-If you're not using the Azure resources created in this lab for other training modules, you can delete them to avoid incurring further charges. Here's how:
+## リソースのクリーンアップ
 
-1. Open the Azure portal at `https://portal.azure.com`, and sign in using the Microsoft account associated with your Azure subscription.
+このラボで作成した Azure リソースを他のトレーニングモジュールで使用しない場合は、追加の料金が発生しないように削除することができます。以下の手順に従ってください：
 
-2. In the top search bar, search for *Azure AI services multi-service account*, and select the Azure AI services multi-service account resource you created in this lab.
+1. `https://portal.azure.com` で Azure ポータルを開き、Azure サブスクリプションに関連付けられている Microsoft アカウントを使用してサインインします。
 
-3. On the resource page, select **Delete** and follow the instructions to delete the resource.
+2. 上部の検索バーに「Azure AI services multi-service account」と入力し、このラボで作成した Azure AI services multi-service account リソースを選択します。
 
-## More information
+3. リソースページで **削除** を選択し、指示に従ってリソースを削除します。
 
-In this exercise, you explored some of the image analysis and manipulation capabilities of the Azure AI Vision service. The service also includes capabilities for detecting objects and people, and other computer vision tasks.
+## 詳細情報
 
-For more information about using the **Azure AI Vision** service, see the [Azure AI Vision documentation](https://learn.microsoft.com/azure/ai-services/computer-vision/).
+この演習では、Azure AI Vision サービスの画像分析と操作の機能の一部を探りました。このサービスには、オブジェクトや人物の検出、その他のコンピュータービジョンのタスクの機能も含まれています。
+
+**Azure AI Vision** サービスの使用方法について詳しくは、[Azure AI Vision ドキュメント](https://learn.microsoft.com/azure/ai-services/computer-vision/)を参照してください。
