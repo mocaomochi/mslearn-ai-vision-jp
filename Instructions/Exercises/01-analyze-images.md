@@ -1,7 +1,7 @@
 ---
 lab:
     title: 'Azure AI Vision を使用して画像を分析する'
-    module: 'Module 2 - Azure AI Vision でコンピューター ビジョン ソリューションを作成する'
+    module: 'Module 2 - Azure AI Vision でコンピュータービジョンソリューションを作成する'
 ---
 
 # Azure AI Vision で画像を分析する
