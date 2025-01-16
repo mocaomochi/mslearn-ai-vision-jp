@@ -1,83 +1,74 @@
 ---
 lab:
-    title: 'Read Text in Images'
-    module: 'Module 11 - Reading Text in Images and Documents'
+    title: '画像内のテキストを読み取る'
+    module: 'Module 11 - 画像やドキュメント内のテキストを読み取る'
 ---
 
-# Read Text in Images
+# 画像内のテキストを読み取る
 
-Optical character recognition (OCR) is a subset of computer vision that deals with reading text in images and documents. The **Azure AI Vision** service provides an API for reading text, which you'll explore in this exercise.
+光学文字認識（OCR）は、画像やドキュメント内のテキストを読み取るコンピュータビジョンの一部です。**Azure AI Vision**サービスは、テキストを読み取るためのAPIを提供しており、この演習でそれを探ります。
 
-## Clone the repository for this course
+## このコースのリポジトリをクローンする
 
-If you haven't already done so, you must clone the code repository for this course:
+まだ行っていない場合は、このコースのコードリポジトリをクローンしてください。
 
-1. Start Visual Studio Code.
-2. Open the palette (SHIFT+CTRL+P) and run a **Git: Clone** command to clone the `https://github.com/MicrosoftLearning/mslearn-ai-vision` repository to a local folder (it doesn't matter which folder).
-3. When the repository has been cloned, open the folder in Visual Studio Code.
-4. Wait while additional files are installed to support the C# code projects in the repo.
+1. Visual Studio Codeを起動します。
+2. パレット（SHIFT+CTRL+P）を開き、**Git: Clone**コマンドを実行して、`https://github.com/MicrosoftLearning/mslearn-ai-vision`リポジトリをローカルフォルダーにクローンします（フォルダーはどこでも構いません）。
+3. リポジトリがクローンされたら、Visual Studio Codeでフォルダーを開きます。
+4. リポジトリ内のC#コードプロジェクトをサポートするために追加のファイルがインストールされるのを待ちます。
 
-    > **Note**: If you are prompted to add required assets to build and debug, select **Not Now**. If you are prompted with the Message *Detected an Azure Function Project in folder*, you can safely close that message.
+    > **注意**: ビルドとデバッグに必要なアセットを追加するように求められた場合は、**Not Now**を選択します。*Detected an Azure Function Project in folder*というメッセージが表示された場合は、そのメッセージを安全に閉じることができます。
 
-## Provision an Azure AI Services resource
+## Azure AI サービス リソースをプロビジョニングする
 
-If you don't already have one in your subscription, you'll need to provision an **Azure AI Services** resource.
+まだサブスクリプションにない場合は、**Azure AI サービス**リソースをプロビジョニングする必要があります。
 
-1. Open the Azure portal at `https://portal.azure.com`, and sign in using the Microsoft account associated with your Azure subscription.
-2. In the top search bar, search for *Azure AI services*, select **Azure AI Services**, and create an Azure AI services multi-service account resource with the following settings:
-    - **Subscription**: *Your Azure subscription*
-    - **Resource group**: *Choose or create a resource group (if you are using a restricted subscription, you may not have permission to create a new resource group - use the one provided)*
-    - **Region**: *Choose from East US, France Central, Korea Central, North Europe, Southeast Asia, West Europe, West US, or East Asia\**
-    - **Name**: *Enter a unique name*
-    - **Pricing tier**: Standard S0
+1. `https://portal.azure.com` で Azure ポータルを開き、Azure サブスクリプションに関連付けられている Microsoft アカウントでサインインします。
+2. 上部の検索バーで「Azure AI services」を検索し、**Azure AI Services**を選択します。次の設定で **Azure AI Services multi-service account** リソースを作成してください。
+    - **サブスクリプション**: *あなたの Azure サブスクリプション*
+    - **リソース グループ**: *リソース グループを選択または作成します（制限されたサブスクリプションを使用している場合、新しいリソース グループを作成する権限がないかもしれません。その場合は提供されたものを使用してください）*
+    - **リージョン**: *利用可能なリージョンを選択します*
+    - **名前**: *一意の名前を入力します*
+    - **価格レベル**: Standard S0
+      ![Create a Azure AI services](./img/create-ai-services.png)
+3. 必要なチェックボックスを選択し、リソースを作成します。
+4. デプロイが完了するのを待ち、デプロイの詳細を表示します。
+5. リソースがデプロイされたら、それに移動して **キーとエンドポイント** ページを表示します。次の手順でエンドポイントとキーの1つが必要になります。
 
-    \*Azure AI Vision 4.0 features are currently only available in these regions.
-
-3. Select the required checkboxes and create the resource.
-4. Wait for deployment to complete, and then view the deployment details.
-5. When the resource has been deployed, go to it and view its **Keys and Endpoint** page. You'll need the endpoint and one of the keys from this page in the next procedure.
-
-## Prepare to use the Azure AI Vision SDK
-
-In this exercise, you'll complete a partially implemented client application that uses the Azure AI Vision SDK to read text.
-
-> **Note**: You can choose to use the SDK for either **C#** or **Python**. In the following steps, perform the actions appropriate for your preferred language.
-
-1. In Visual Studio Code, in the **Explorer** pane, browse to the **Labfiles\05-ocr** folder and expand the **C-Sharp** or **Python** folder depending on your language preference.
-2. Right-click the **read-text** folder and open an integrated terminal. Then install the Azure AI Vision SDK package by running the appropriate command for your language preference:
-
+1. Visual Studio Code の **エクスプローラー** ペインで **Libfiles\05-ocr** フォルダーに移動し、使用する言語に応じて **C-Sharp** または **Python** フォルダーを展開します。
+2. **read-text** フォルダーを右クリックして統合ターミナルを開きます。その後、使用する言語に応じて以下のコマンドを実行して Azure AI Vision SDK パッケージをインストールしてください。
+   
     **C#**
-    
+
     ```
     dotnet add package Azure.AI.Vision.ImageAnalysis -v 1.0.0-beta.3
     ```
 
-    > **Note**: If you are prompted to install dev kit extensions, you can safely close the message.
+    > **注意**: 開発キットの拡張機能をインストールするように求められた場合は、そのメッセージを安全に閉じることができます。
 
     **Python**
-    
+
     ```
     pip install azure-ai-vision-imageanalysis==1.0.0b3
     ```
 
-3. View the contents of the **read-text** folder, and note that it contains a file for configuration settings:
+3. **read-text** フォルダーの内容を確認し、設定ファイルが含まれていることを確認してください。
 
     - **C#**: appsettings.json
     - **Python**: .env
 
-    Open the configuration file and update the configuration values it contains to reflect the **endpoint** and an authentication **key** for your Azure AI services resource. Save your changes.
+    設定ファイルを開き、Azure AI サービスリソースの **エンドポイント** と認証 **キー** を反映するように設定値を変更します。変更したら保存してください。
 
+## Azure AI Vision SDKを使って画像からテキストを読み取る
 
-## Use the Azure AI Vision SDK to read text from an image
+**Azure AI Vision SDK**には、画像からテキストを読み取る機能があります。この演習では、Azure AI Vision SDKを使用して画像からテキストを読み取るクライアントアプリケーションを作成します。未完成のコードの中身を埋めることで、アプリケーションを完成させましょう。
 
-One of the features of the **Azure AI Vision SDK** is to read text from an image. In this exercise, you'll complete a partially implemented client application that uses the Azure AI Vision SDK to read text from an image.
-
-1. The **read-text** folder contains a code file for the client application:
-
+1. **read-text** フォルダーには、クライアントアプリケーションのコードファイルが含まれています。
+   
     - **C#**: Program.cs
     - **Python**: read-text.py
 
-    Open the code file and at the top, under the existing namespace references, find the comment **Import namespaces**. Then, under this comment, add the following language-specific code to import the namespaces you'll need to use the Azure AI Vision SDK:
+        コードファイルを開き、既存の名前空間参照の下にあるコメント **Import namespaces** を見つけてください。その後、このコメントの下に、Azure AI Vision SDKを使用するために必要な名前空間をインポートするための以下のコードを追加します。
 
     **C#**
     
@@ -95,8 +86,8 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
     from azure.core.credentials import AzureKeyCredential
     ```
 
-2. In the code file for your client application, in the **Main** function, the code to load the configuration settings has been provided. Then find the comment **Authenticate Azure AI Vision client**. Then, under this comment, add the following language-specific code to create and authenticate an Azure AI Vision client object:
-
+2. クライアントアプリケーションのコードファイルで、**Main** 関数内に設定を読み込むコードが提供されています。その後、**Authenticate Azure AI Vision client** というコメントを見つけてください。このコメントの下に、Azure AI Vision クライアントオブジェクトを作成して認証するための以下の言語別のコードを追加します。
+   
     **C#**
     
     ```C#
@@ -116,10 +107,10 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
     )
     ```
 
-3. In the **Main** function, under the code you just added, note that the code specifies the path to an image file and then passes the image path to the **GetTextRead** function. This function isn't yet fully implemented.
+3. **Main** 関数内で、先ほど追加したコードの下に、画像ファイルのパスを指定し、そのパスを **GetTextRead** 関数に渡すコードがあることに注意してください。この関数はまだ完全には実装されていません。
 
-4. Let's add some code to the body of the **GetTextRead** function. Find the comment **Use Analyze image function to read text in image**. Then, under this comment, add the following language-specific code, noting that the visual features are specified when calling the `Analyze` function:
-
+4. **GetTextRead** 関数の本文にコードを追加しましょう。**Use Analyze image function to read text in image** というコメントを見つけてください。その後、このコメントの下に、`Analyze` 関数を呼び出す際に視覚的な特徴を指定する以下の言語別のコードを追加します。
+   
     **C#**
 
     ```C#
@@ -187,7 +178,7 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
         print('\n  Results saved in', outputfile)
     ```
 
-5. In the code you just added in the **GetTextRead** function, and under the **Return the text detected in the image** comment, add the following code (this code prints the image text to the console and generates the image **text.jpg** which highlights the image's text):
+5. **GetTextRead** 関数に追加したコードの中で、**Return the text detected in the image** コメントの下に次のコードを追加してください。このコードは画像のテキストをコンソールに表示し、画像のテキストを強調表示する **text.jpg** という画像を生成します。
 
     **C#**
     
@@ -244,12 +235,14 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
         draw.polygon(bounding_polygon, outline=color, width=3)
     ```
 
-6. In the **read-text/images** folder, select **Lincoln.jpg** to view the file that your code processes.
+6. **read-text/images** フォルダーで **Lincoln.jpg** を選択して、コードが処理するファイルを確認します。
 
-7. In the code file for your application, in the **Main** function, examine the code that runs if the user selects menu option **1**. This code calls the **GetTextRead** function, passing the path to the *Lincoln.jpg* image file.
+    ![Lincoln.jpg](./img/Lincoln.jpg)
 
-8. Save your changes and return to the integrated terminal for the **read-text** folder, and enter the following command to run the program:
+7. アプリケーションのコードファイルで、**Main** 関数内のコードを確認し、ユーザーがメニューオプション **1** を選択した場合に実行されるコードを見つけます。このコードは **GetTextRead** 関数を呼び出し、*Lincoln.jpg* 画像ファイルのパスを渡します。
 
+8. 変更を保存し、**read-text** フォルダーの統合ターミナルに戻り、次のコマンドを入力してプログラムを実行します。
+   
     **C#**
     
     ```
@@ -262,12 +255,17 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
     python read-text.py
     ```
 
-9. When prompted, enter **1** and observe the output, which is the text extracted from the image.
+9. プログラムが実行されたら、**1** を入力して、画像から抽出されたテキストを確認してください。
 
-10. In the **read-text** folder, select the **text.jpg** image and noticed how there's a polygon around each *line* of text.
+    *実行結果 (Python)*
+    ![Run & Result 1](./img/read-text-result-1.png)
 
-11. Return to the code file in Visual Studio Code, and find the comment **Return the position bounding box around each line**. Then, under this comment, add the following code:
+10. **read-text** フォルダーで **text.jpg** 画像を選択し、各テキストの *行* の周りにポリゴン（多角形）が描かれていることを確認します。
+    
+    ![text.jpg](./img/read-text-result-1_text.jpg)
 
+11. Visual Studio Code のコードファイルに戻り、コメント **Return the position bounding box around each line** を見つけてください。その後、このコメントの下に次のコードを追加します。
+    
     **C#**
     
     ```C#
@@ -281,9 +279,8 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
     # Return the position bounding box around each line
     print("   Bounding Polygon: {}".format(bounding_polygon))
     ```
-
-12. Save your changes and return to the integrated terminal for the **read-text** folder, and enter the following command to run the program:
-
+12. 変更を保存し、**read-text** フォルダーの統合ターミナルに戻り、次のコマンドを入力してプログラムを実行します。
+    
     **C#**
     
     ```
@@ -295,11 +292,12 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
     ```
     python read-text.py
     ```
+13. プログラムが実行されたら、**1** を入力してください。画像内の各行のテキストとその位置が出力されることを確認してください。
+    
+    *実行結果 (Python)*
+    ![Result with respective position](./img/read-text-result-3.png)
 
-13. When prompted, enter **1** and observe the output, which should be each line of text in the image with their respective position in the image.
-
-
-14. Return to the code file in Visual Studio Code, and find the comment **Return each word detected in the image and the position bounding box around each word with the confidence level of each word**. Then, under this comment, add the following code:
+14. Visual Studio Code のコードファイルに戻り、コメント **Return each word detected in the image and the position bounding box around each word with the confidence level of each word** を見つけてください。その後、このコメントの下に次のコードを追加します。
 
     **C#**
     
@@ -338,7 +336,39 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
         draw.polygon(bounding_polygon, outline=color, width=3)
     ```
 
-15. Save your changes and return to the integrated terminal for the **read-text** folder, and enter the following command to run the program:
+15. 変更を保存し、**read-text** フォルダーの統合ターミナルに戻り、次のコマンドを入力してプログラムを実行します。
+
+    **C#**
+    
+    ```
+    dotnet run
+    ```
+    
+    **Python**
+    
+    ```
+    python read-text.py
+    ```
+16. プロンプトが表示されたら、**1** を入力して出力を確認します。画像内の各単語のテキストとその位置が表示されるはずです。各単語の信頼度も表示されることに注意してください。
+
+    *実行結果 (Python)*
+    ![Detect words, posision and confidence level](./img/read-text-resut-4.png)
+
+17. **read-text** フォルダーで **text.jpg** 画像を選択し、各単語の周りにポリゴン（多角形）が描かれていることを確認します。
+
+    ![Detect words with poligon](./img/read-text-result-4_text.jpg)
+
+## Azure AI Vision SDKを使って手書きのテキストを画像から読み取る
+
+前の演習では、画像からはっきりとしたテキストを読み取りましたが、手書きのメモや紙からテキストを読み取りたい場合もあります。幸いなことに、**Azure AI Vision SDK**は、手書きのテキストも同じコードで読み取ることができます。前の演習で使用したコードをそのまま使いますが、今回は別の画像を使用します。
+
+1. **read-text/images** フォルダーで **Note.jpg** を選択して、コードが処理するファイルを確認します。
+
+    ![Note.jpg](./img/Note.jpg)
+
+2. アプリケーションのコードファイルで、**Main** 関数内のコードを確認し、ユーザーがメニューオプション **2** を選択した場合に実行されるコードを見つけます。このコードは **GetTextRead** 関数を呼び出し、*Note.jpg* 画像ファイルのパスを渡します。
+
+3. **read-text** フォルダーの統合ターミナルで、次のコマンドを入力してプログラムを実行します。
 
     **C#**
     
@@ -352,19 +382,67 @@ One of the features of the **Azure AI Vision SDK** is to read text from an image
     python read-text.py
     ```
 
-16. When prompted, enter **1** and observe the output, which should be each word of text in the image with their respective position in the image. Notice how the confidence level of each word is also returned.
+4. プロンプトが表示されたら、**2** を入力して出力を確認します。これは、ノート画像から抽出されたテキストです。
 
-17. In the **read-text** folder, select the **text.jpg** image and noticed how there's a polygon around each *word*.
+    *実行結果 (Python)*
+    ![Read handwriting text](./img/read-text-result-5.png)
 
-## Use the Azure AI Vision SDK to read handwritten text from an image
+5. **read-text** フォルダーで **text.jpg** 画像を選択し、ノートの各単語の周りにポリゴンが描かれていることを確認します。
+   
+   ![Read handwriting text with polygons](./img/read-text-result-5_text.jpg)
 
-In the previous exercise, you read well defined text from an image, but sometimes you might also want to read text from handwritten notes or papers. The good news is that the **Azure AI Vision SDK** can also read handwritten text with the same exact code you used to read well defined text. We'll use the same code from the previous exercise, but this time we'll use a different image.
+## 日本語文字を読み取る
 
-1. In the **read-text/images** folder, select on **Note.jpg** to view the file that your code processes.
+ここまでの演習で英語の文字列は読み取れることを確認しました。それでは日本語の文字列はどうでしょうか？幸いなことにAzure AI Vision は日本語の読み取りにも対応しています。ただし、英語のように単語の区切りにスペースがないため、英語とは少し挙動が異なります。さらに日本語の縦書きはどうでしょうか？実験してみましょう。
 
-2. In the code file for your application, in the **Main** function, examine the code that runs if the user selects menu option **2**. This code calls the **GetTextRead** function, passing the path to the *Note.jpg* image file.
+1. **read-text\images** フォルダーに日本語の文字を含む画像がいくつか保存されていることを確認してください。
 
-3. From the integrated terminal for the **read-text** folder, enter the following command to run the program:
+   - **Note_jp.jpg**: 日本語のお買い物リストの画像
+     ![Note_jp.jpg](./img/Note_jp.jpg)
+   - **Tategaki_jp.jpg**: 日本語の縦書きで書かれた掲示板の画像
+     ![Tategaki_jp.jpg](./img/Tategaki_jp.jpg) 
+
+2. Visual Studio Code のコードファイルに戻り、コメント ****Menu for text reading functions**** を見つけてください。画像ファイルを読みこむ部分を探し、上記の画像ファイル名に書き換えてください。
+
+    **C#**
+
+    ```C#
+    // Menu for text reading functions
+    Console.WriteLine("\n1: Use Read API for image (Tategaki_jp.jpg)\n2: Read handwriting (Note_jp.jpg)\nAny other key to quit\n");
+    Console.WriteLine("Enter a number:");
+    string command = Console.ReadLine();
+    string imageFile;
+
+    switch (command)
+    {
+        case "1":
+            imageFile = "images/Tategaki_jp.jpg";
+            GetTextRead(imageFile, client);
+            break;
+        case "2":
+            imageFile = "images/Note_jp.jpg";
+            GetTextRead(imageFile, client);
+            break;
+        default:
+            break;
+    }
+    ```
+
+    **Python**
+
+    ```Python
+    # Menu for text reading functions
+    print('\n1: Use Read API for image (Tategaki_jp.jpg)\n2: Read handwriting (Note_jp.jpg)\nAny other key to quit\n')
+    command = input('Enter a number:')
+    if command == '1':
+        image_file = os.path.join('images','Tategaki_jp.jpg')
+        GetTextRead(image_file)
+    elif command =='2':
+        image_file = os.path.join('images','Note_jp.jpg')
+        GetTextRead(image_file)
+    ```
+
+3. **read-text** フォルダーの統合ターミナルで、次のコマンドを入力してプログラムを実行します。
 
     **C#**
     
@@ -378,20 +456,29 @@ In the previous exercise, you read well defined text from an image, but sometime
     python read-text.py
     ```
 
-4. When prompted, enter **2** and observe the output, which is the text extracted from the note image.
+4. プロンプトが表示されたら、**2** を入力して出力を確認します。これは、ノート画像から抽出されたテキストです。
 
-5. In the **read-text** folder, select the **text.jpg** image and noticed how there's a polygon around each *word* of the note.
+    *実行結果 (Python)*
+    ![Read Japanese handwriting text](./img/read-text-result-6.png)
 
-## Clean up resources
+    日本語の場合、１行の文章は正しく認識されるものの、英語のように単語間にスペースがないため一文字ずつ認識されることがわかります。
 
-If you're not using the Azure resources created in this lab for other training modules, you can delete them to avoid incurring further charges. Here's how:
+5. **read-text** フォルダーで **text.jpg** 画像を選択し、Visual Studio Codeで表示してください。各文字の周りにポリゴンが描かれていることが確認できます。
+   
+   ![Read Japanese handwriting text with polygons](./img/read-text-result-6_text.jpg)
 
-1. Open the Azure portal at `https://portal.azure.com`, and sign in using the Microsoft account associated with your Azure subscription.
+6. 同様に、実行時のプロンプトで **1** を入力して、縦書きの文字も認識できるかどうか試してください。
 
-2. In the top search bar, search for *Azure AI services multi-service account*, and select the Azure AI services multi-service account resource you created in this lab
+## リソースのクリーンアップ
 
-3. On the resource page, select **Delete** and follow the instructions to delete the resource.
+このラボで作成した Azure リソースを他のトレーニングモジュールで使用しない場合は、追加の料金が発生しないように削除することができます。以下の手順で行います。
 
-## More information
+1. `https://portal.azure.com` で Azure ポータルを開き、Azure サブスクリプションに関連付けられている Microsoft アカウントでサインインします。
 
-For more information about using the **Azure AI Vision** service to read text, see the [Azure AI Vision documentation](https://learn.microsoft.com/azure/ai-services/computer-vision/concept-ocr).
+2. 上部の検索バーで「Azure AI services multi-service account」を検索し、このラボで作成した Azure AI services multi-service account リソースを選択します。
+
+3. リソースページで **削除** を選択し、指示に従ってリソースを削除します。
+
+## 詳細情報
+
+**Azure AI Vision** サービスを使ってテキストを読み取る方法については、[Azure AI Vision ドキュメント](https://learn.microsoft.com/azure/ai-services/computer-vision/concept-ocr)をご覧ください。
