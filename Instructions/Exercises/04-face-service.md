@@ -34,7 +34,7 @@ lab:
     - **リージョン**: *利用可能なリージョンを選択します*
     - **名前**: *一意の名前を入力します*
     - **価格レベル**: Standard S0
-      ![Create a Azure AI services](./img/create-ai-services.png)
+      ![Create a Azure AI services](../media/04/create-ai-services.png)
 
 3. 必要なチェックボックスを選択し、リソースを作成します。
 4. デプロイが完了するのを待ち、デプロイの詳細を表示します。
@@ -96,7 +96,7 @@ lab:
 1. Visual Studio Code で **computer-vision** フォルダーを展開し、その中にある **images** フォルダーを開きます。
 2. **people.jpg** 画像を選択して表示します。
    
-   ![people.jpg](./img/face_analysis_original_people.jpg)
+   ![people.jpg](../media/04/face_analysis_original_people.jpg)
 
 > **注意**: この演習で使用するC#のコードファイルは`System.Drawing.Common` パッケージを使用します。このパッケージはMacOSに対応していないため、MacOSでは実行できません。例外エラーで停止します。
 > 
@@ -202,11 +202,11 @@ lab:
 7. コードファイルと同じフォルダーに生成された **people.jpg** ファイルを表示して、注釈が付けられた顔を確認します。この場合、コードは顔の属性を使用してボックスの左上の位置をラベル付けし、バウンディングボックス（囲み枠）の座標を使用して人物の周りに長方形を描画します。
    
     *出力結果 people.jpg*
-    ![people.jpg](./img/people_result_people.jpg)
+    ![people.jpg](../media/04/people_result_people.jpg)
 
 サービスが検出したすべての人の信頼度スコアを確認したい場合は、`Return the confidence of the person detected` というコメントの下にあるコード行のコメントを解除して、コードを再実行してください。
     *実行結果*
-    ![Show confidence](./img/people_results_show_confidence.png)
+    ![Show confidence](../media/04/people_results_show_confidence.png)
 
 
 ## Face SDKの準備
@@ -439,11 +439,11 @@ with open(image_file, mode="rb") as image_data:
 6. プログラムが実行されたら、**1** を入力して出力結果を確認します。出力には、検出された各顔のIDと属性が含まれます。
 
     *実行例 Python*
-    ![Analyze face result](./img/analyze-faces-result.png)
+    ![Analyze face result](../media/04/analyze-faces-result.png)
 
 7. コードファイルと同じフォルダーに生成された **detected_faces.jpg** ファイルを表示して、注釈が付けられた顔を確認します。
 
-    ![Detected feces](./img/detected_faces.jpg)
+    ![Detected feces](../media/04/detected_faces.jpg)
 
 ## 詳細情報
 

@@ -25,6 +25,8 @@ Azure AI Vision は、画像を分析することで視覚的な入力を解釈�
 1. `https://portal.azure.com` で Azure ポータルを開き、Azure サブスクリプションに関連付けられている Microsoft アカウントを使用してサインインします。
 2. **リソースの作成** を選択します。
 3. 検索バーに「Azure AI services」と入力し、**Azure AI Services** を選択して、次の設定で Azure AI サービスのマルチサービス アカウント リソースを作成します。
+
+        ![Find Azure AI services multi-service account](../media/02/find_azure_ai_service_multi_service_account.png)
     - **サブスクリプション**: *あなたの Azure サブスクリプション*
     - **リソースグループ**: *既存のリソース グループを選択するか、新しいリソース グループを作成します（制限付きサブスクリプションを使用している場合は、新しいリソース グループを作成する権限がないかもしれません。その場合は提供されたものを使用してください）*
     - **リージョン**: *East US、West US、France Central、Korea Central、North Europe、Southeast Asia、West Europe、または East Asia から選択します*
@@ -32,13 +34,13 @@ Azure AI Vision は、画像を分析することで視覚的な入力を解釈�
     - **価格レベル**: Standard S0
     \*Azure AI Vision 4.0 の全機能セットは現在、これらのリージョンでのみ利用可能です。Japan East, Japan Westは選択できないことに注意してください。
     *設定例*
-    ![Provision an Azure AI Services resource](./img/create-ai-services.png)
+    ![Provision an Azure AI Services resource](../media/01/create-ai-services.png)
 
 4. 必要なチェックボックスを選択し、リソースを作成します。
 5. デプロイが完了するのを待ち、デプロイの詳細を確認します。
 6. リソースがデプロイされたら、そのリソースに移動し、**キーとエンドポイント** ページを表示します。次の手順でエンドポイントとキーのいずれかが必要になります。
     *設定例*
-    ![Key and Endpoint](./img/key-and-endpoint.png)
+    ![Key and Endpoint](../media/01/key-and-endpoint.png)
 
 ## Azure AI Vision SDK を使用する準備をする
 
@@ -232,10 +234,10 @@ python image-analysis.py images/street.jpg
 8. 前のステップを繰り返して、**images/person.jpg** ファイルのキャプションを生成します。
 
 *実行結果例 C#*
-![Image Captions](./img/C-Sharp/image-analytics-caption.png)
+![Image Captions](../media/01/image-analytics-caption_csharp.png)
 
 *実行結果例 Python*
-![Image Captions](./img/Python/image-analytics-caption.png)
+![Image Captions](../media/01/image-analytics-caption_python.png)
 
 ## 画像のタグを取得する
 

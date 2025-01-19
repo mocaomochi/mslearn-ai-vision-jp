@@ -30,7 +30,7 @@ lab:
     - **リージョン**: *利用可能なリージョンを選択します*
     - **名前**: *一意の名前を入力します*
     - **価格レベル**: Standard S0
-      ![Create a Azure AI services](./img/create-ai-services.png)
+      ![Create a Azure AI services](../media/05/create-ai-services.png)
 3. 必要なチェックボックスを選択し、リソースを作成します。
 4. デプロイが完了するのを待ち、デプロイの詳細を表示します。
 5. リソースがデプロイされたら、それに移動して **キーとエンドポイント** ページを表示します。次の手順でエンドポイントとキーの1つが必要になります。
@@ -237,7 +237,7 @@ lab:
 
 6. **read-text/images** フォルダーで **Lincoln.jpg** を選択して、コードが処理するファイルを確認します。
 
-    ![Lincoln.jpg](./img/Lincoln.jpg)
+    ![Lincoln.jpg](../media/05/Lincoln.jpg)
 
 7. アプリケーションのコードファイルで、**Main** 関数内のコードを確認し、ユーザーがメニューオプション **1** を選択した場合に実行されるコードを見つけます。このコードは **GetTextRead** 関数を呼び出し、*Lincoln.jpg* 画像ファイルのパスを渡します。
 
@@ -258,11 +258,11 @@ lab:
 9. プログラムが実行されたら、**1** を入力して、画像から抽出されたテキストを確認してください。
 
     *実行結果 (Python)*
-    ![Run & Result 1](./img/read-text-result-1.png)
+    ![Run & Result 1](../media/05/read-text-result-1.png)
 
 10. **read-text** フォルダーで **text.jpg** 画像を選択し、各テキストの *行* の周りにポリゴン（多角形）が描かれていることを確認します。
     
-    ![text.jpg](./img/read-text-result-1_text.jpg)
+    ![text.jpg](../media/05/read-text-result-1_text.jpg)
 
 11. Visual Studio Code のコードファイルに戻り、コメント **Return the position bounding box around each line** を見つけてください。その後、このコメントの下に次のコードを追加します。
     
@@ -295,7 +295,7 @@ lab:
 13. プログラムが実行されたら、**1** を入力してください。画像内の各行のテキストとその位置が出力されることを確認してください。
     
     *実行結果 (Python)*
-    ![Result with respective position](./img/read-text-result-3.png)
+    ![Result with respective position](../media/05/read-text-result-3.png)
 
 14. Visual Studio Code のコードファイルに戻り、コメント **Return each word detected in the image and the position bounding box around each word with the confidence level of each word** を見つけてください。その後、このコメントの下に次のコードを追加します。
 
@@ -352,11 +352,11 @@ lab:
 16. プロンプトが表示されたら、**1** を入力して出力を確認します。画像内の各単語のテキストとその位置が表示されるはずです。各単語の信頼度も表示されることに注意してください。
 
     *実行結果 (Python)*
-    ![Detect words, posision and confidence level](./img/read-text-resut-4.png)
+    ![Detect words, posision and confidence level](../media/05/read-text-resut-4.png)
 
 17. **read-text** フォルダーで **text.jpg** 画像を選択し、各単語の周りにポリゴン（多角形）が描かれていることを確認します。
 
-    ![Detect words with poligon](./img/read-text-result-4_text.jpg)
+    ![Detect words with poligon](../media/05/read-text-result-4_text.jpg)
 
 ## Azure AI Vision SDKを使って手書きのテキストを画像から読み取る
 
@@ -364,7 +364,7 @@ lab:
 
 1. **read-text/images** フォルダーで **Note.jpg** を選択して、コードが処理するファイルを確認します。
 
-    ![Note.jpg](./img/Note.jpg)
+    ![Note.jpg](../media/05/Note.jpg)
 
 2. アプリケーションのコードファイルで、**Main** 関数内のコードを確認し、ユーザーがメニューオプション **2** を選択した場合に実行されるコードを見つけます。このコードは **GetTextRead** 関数を呼び出し、*Note.jpg* 画像ファイルのパスを渡します。
 
@@ -385,11 +385,11 @@ lab:
 4. プロンプトが表示されたら、**2** を入力して出力を確認します。これは、ノート画像から抽出されたテキストです。
 
     *実行結果 (Python)*
-    ![Read handwriting text](./img/read-text-result-5.png)
+    ![Read handwriting text](../media/05/read-text-result-5.png)
 
 5. **read-text** フォルダーで **text.jpg** 画像を選択し、ノートの各単語の周りにポリゴンが描かれていることを確認します。
    
-   ![Read handwriting text with polygons](./img/read-text-result-5_text.jpg)
+   ![Read handwriting text with polygons](../media/05/read-text-result-5_text.jpg)
 
 ## 日本語文字を読み取る
 
@@ -398,9 +398,9 @@ lab:
 1. **read-text\images** フォルダーに日本語の文字を含む画像がいくつか保存されていることを確認してください。
 
    - **Note_jp.jpg**: 日本語のお買い物リストの画像
-     ![Note_jp.jpg](./img/Note_jp.jpg)
+     ![Note_jp.jpg](../media/05/Note_jp.jpg)
    - **Tategaki_jp.jpg**: 日本語の縦書きで書かれた掲示板の画像
-     ![Tategaki_jp.jpg](./img/Tategaki_jp.jpg) 
+     ![Tategaki_jp.jpg](../media/05/Tategaki_jp.jpg) 
 
 2. Visual Studio Code のコードファイルに戻り、コメント ****Menu for text reading functions**** を見つけてください。画像ファイルを読みこむ部分を探し、上記の画像ファイル名に書き換えてください。
 
@@ -459,13 +459,13 @@ lab:
 4. プロンプトが表示されたら、**2** を入力して出力を確認します。これは、ノート画像から抽出されたテキストです。
 
     *実行結果 (Python)*
-    ![Read Japanese handwriting text](./img/read-text-result-6.png)
+    ![Read Japanese handwriting text](../media/05/read-text-result-6.png)
 
     日本語の場合、１行の文章は正しく認識されるものの、英語のように単語間にスペースがないため一文字ずつ認識されることがわかります。
 
 5. **read-text** フォルダーで **text.jpg** 画像を選択し、Visual Studio Codeで表示してください。各文字の周りにポリゴンが描かれていることが確認できます。
    
-   ![Read Japanese handwriting text with polygons](./img/read-text-result-6_text.jpg)
+   ![Read Japanese handwriting text with polygons](../media/05/read-text-result-6_text.jpg)
 
 6. 同様に、実行時のプロンプトで **1** を入力して、縦書きの文字も認識できるかどうか試してください。
 

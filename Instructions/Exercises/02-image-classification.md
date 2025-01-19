@@ -24,7 +24,7 @@ Azure AI Vision を使うと、指定したラベルでオブジェクトを分�
 
 1. `https://portal.azure.com` で Azure ポータルを開き、Azure サブスクリプションに関連付けられている Microsoft アカウントを使用してサインインします。
 2. 検索バーに「Azure AI services」と入力し、**Azure AI services multi-service account** を選択して、次の設定で Azure AI サービスのマルチサービス アカウント リソースを作成します。
-    ![Find Azure AI services multi-service account](./img/find_azure_ai_service_multi_service_account.png)
+    ![Find Azure AI services multi-service account](../media/02/find_azure_ai_service_multi_service_account.png)
 
     - **サブスクリプション**: *あなたの Azure サブスクリプション*
     - **リソースグループ**: *既存のリソース グループを選択するか、新しいリソース グループを作成します（制限付きサブスクリプションを使用している場合は、新しいリソース グループを作成する権限がないかもしれません。その場合は提供されたものを使用してください）*
@@ -33,7 +33,7 @@ Azure AI Vision を使うと、指定したラベルでオブジェクトを分�
     - **価格レベル**: Standard S0
     \*Azure AI Vision 4.0 の全機能セットは現在、これらのリージョンでのみ利用可能です。Japan East, Japan Westは選択できないことに注意してください。
     *設定例*
-    ![Provision an Azure AI Services resource](./img/create-ai-services.png)
+    ![Provision an Azure AI Services resource](../media/02/create-ai-services.png)
 
 3. 必要なチェックボックスにチェックを入れ、リソースを作成します。
 
@@ -48,13 +48,13 @@ Azure AI Vision を使うと、指定したラベルでオブジェクトを分�
     - **プライマリサービス**: Azure Blob Storage または Azure Data Lake Storage Gen 2
     - **パフォーマンス**: スタンダード
     - **冗長性**: ローカル冗長ストレージ (LRS)
-    ![Create a storage account](./img/create_a_storage_account.png)
+    ![Create a storage account](../media/02/create_a_storage_account.png)
 2. ストレージアカウントが作成される間に、Visual Studio Code を開き、**Labfiles/02-image-classification** フォルダーを展開します。
 3. Windowsの場合は、そのフォルダー内の **replace.ps1** を、MacOSの場合は **replace.sh** 選択してコードを確認します。このスクリプトは、後のステップで使用する JSON ファイル (COCO ファイル) のプレースホルダーをストレージアカウント名に置き換えます。ファイルの最初の行のプレースホルダーをストレージアカウント名に置き換えて、ファイルを保存します。
 *設定例 (replace.ps1の赤枠の部分をストレージアカウント名に置き換えています)*
-![Change replace.ps1 file](./img/change_replace_ps1.png)
+![Change replace.ps1 file](../media/02/change_replace_ps1.png)
 *設定例 (replace.shの赤枠の部分をストレージアカウント名に置き換えています)*
-![Change replace.sh file](./img/change_replace_sh.png)
+![Change replace.sh file](./media/02/change_replace_sh.png)
 4. **02-image-classification** フォルダーを右クリックして統合ターミナルを開き、次のコマンドを実行します。
    
    *Windowsの場合*
@@ -70,16 +70,16 @@ Azure AI Vision を使うと、指定したラベルでオブジェクトを分�
 6. JSONファイルとPowerShellもしくはShellファイルの両方を閉じて、Azure ポータルのブラウザウィンドウに戻ります。
 7. ストレージアカウントの作成が完了しているはずです。作成したストレージアカウントの**リソースに移動**します。
 8. ストレージアカウントでパブリックアクセスを有効にします。左側のペインで、**設定** グループの **構成** に移動し、*BLOB匿名アクセスを許可* を有効にし、**保存** を選択します。
-    ![Enable Blog Anonymous Access](./img/enable_blob_anonymous_access.png)
+    ![Enable Blog Anonymous Access](../media/02/enable_blob_anonymous_access.png)
 9. 左側のペインで、**データストレージ** の **コンテナー** を選択し、`fruit` という名前の新しいコンテナーを作成し、**匿名アクセスレベル** を *コンテナー (コンテナーとBLOBの匿名読み取りアクセス)* に設定します。
 
     > **注意**: **匿名アクセスレベル** が無効になっている場合は、ブラウザページを更新してください。
 
-    ![Create a new strage container](./img/create_a_new_storage_container.png)
+    ![Create a new strage container](../media/02/create_a_new_storage_container.png)
 
 10. `fruit` コンテナーに移動し、**アップロード** を選択して、**Labfiles/02-image-classification/training-images** フォルダー内の画像と JSON ファイルをそのコンテナーにアップロードします。
 
-    ![Upload training images](./img/upload_training_images.png)
+    ![Upload training images](../media/02/upload_training_images.png)
 
 ## カスタムモデルのトレーニングプロジェクトを作成する
 
@@ -88,20 +88,20 @@ Azure AI Vision を使うと、指定したラベルでオブジェクトを分�
 1. ウェブブラウザーで `https://portal.vision.cognitive.azure.com/` にアクセスし、Azure AI リソースを作成した Microsoft アカウントでサインインします。
 2. **Customize models with images (画像を使ったカスタマイズモデル)** タイルを選択します（デフォルトビューに表示されていない場合は **Image Analysis(画像分析)** タブにあります）。
 
-    ![Azure AI Vision Studio](./img/vision-studio.png)
+    ![Azure AI Vision Studio](../media/02/vision-studio.png)
 
 3. 作成した Azure AI サービスのリソースを選択します。
    
-    ![Select your AI service resouce](./img/select_your_ai_service_resource.png)
+    ![Select your AI service resouce](../media/02/select_your_ai_service_resource.png)
 
     > ここで Azure AI サービスのリソースが表示されない場合、リソースを作成する際に**Azure AI service multi-service account** が選択されていなかったかもしれません。もしその場合は、Azure AI サービスリソースを作り直してください。
 
 4. プロジェクトで、上部の **Add new dataset (新しいデータセットを追加)** を選択し、次の設定で構成します:
-     ![Create a new dataset](./img/create_a_new_dataset.png)
+     ![Create a new dataset](../media/02/create_a_new_dataset.png)
     - **データセット名**: training_images
     - **モデルタイプ**: Image classification (画像分類)
     - **Azure Blob ストレージコンテナーを選択**: **Select Container(コンテナーを選択)** を選択
-        ![Select the target Azure Blob](./img/select_the_target_azure_blog.png)
+        ![Select the target Azure Blob](../media/02/select_the_target_azure_blog.png)
         - **サブスクリプション**: *あなたの Azure サブスクリプション*
         - **ストレージアカウント**: *作成したストレージアカウント*
         - **Blob コンテナー**: fruit
@@ -117,17 +117,17 @@ Azure AI Vision を使うと、指定したラベルでオブジェクトを分�
 2. ドロップダウンメニューから **Import COCO file from a Blob Container (Blob コンテナーから COCO ファイルをインポート)** を選択します。
 3. すでに `fruit` という名前のコンテナーを接続しているので、Vision Studio がその中から COCO ファイルを検索します。ドロップダウンメニューから **training_labels.json** を選択し、COCO ファイルを追加します。
 
-    ![Import and add COCO file](./img/inport_coco_file.png)
+    ![Import and add COCO file](../media/02/inport_coco_file.png)
 
 4. 左側のメニューから **Custom Models ** に移動し、**Train a new model (新しいモデルをトレーニング)** を選択し、以下の設定をします。
-    ![Train a new model](./img/traing_a_new_model.png)
+    ![Train a new model](../media/02/traing_a_new_model.png)
     - **モデルの名前**: classifyfruit
     - **モデルのタイプ**: Image classification (画像分類)
     - **トレーニングデータセットを選択**: training_images
     - その他の設定はデフォルトのままにして、**モデルをトレーニング** を選択します。
-    ![Train a new model 1](./img/train_a_new_model_1.png)
-    ![Train a new model 2](./img/train_a_new_model_2.png)
-    ![Train a new model 3](./img/train_a_new_model_3.png)
+    ![Train a new model 1](../media/02/train_a_new_model_1.png)
+    ![Train a new model 2](../media/02/train_a_new_model_2.png)
+    ![Train a new model 3](../media/02/train_a_new_model_3.png)
 
 トレーニングには時間がかかることがあります。デフォルトの予算は最大1時間ですが、この小さなデータセットの場合は通常それよりも早く完了します。数分ごとに **Refresh** ボタンを押して、ジョブのステータスが *成功* になるのを確認してください。ジョブのステータスが*成功*になったら、そのモデルを選択します。
 
@@ -142,7 +142,7 @@ Azure AI Vision を使うと、指定したラベルでオブジェクトを分�
 3. 各画像を選択して結果を確認します。結果ボックスの **JSON** タブを選択して、完全な JSON 応答を確認します。
 
 *結果表示例*
-![Prediction result](./img/custom_vision_try_it_out.png)
+![Prediction result](../media/02/custom_vision_try_it_out.png)
 
 <!-- Option coding example to run-->
 ## リソースをクリーンアップする

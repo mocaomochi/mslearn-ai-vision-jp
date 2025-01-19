@@ -34,7 +34,7 @@ lab:
 
     > **注意**: サブスクリプションに既に F0 カスタムビジョンサービスがある場合は、今回は **S0** を選択してください。
 
-    ![Create a custom vision](./img/create-a-custom-vision-resource.png)
+    ![Create a custom vision](../media/03/create-a-custom-vision-resource.png)
 
 3. リソースが作成されるのを待ち、デプロイメントの詳細を確認します。トレーニング用と予測用の2つのカスタムビジョンリソースがプロビジョニングされていることがわかります（**-Prediction** というサフィックスで識別できます）。これらは、作成したリソースグループに移動して確認できます。
 
@@ -45,14 +45,14 @@ lab:
 オブジェクト検出モデルをトレーニングするには、トレーニングリソースに基づいたカスタムビジョンプロジェクトを作成する必要があります。これを行うには、カスタムビジョンポータルを使用します。
 
 1. 新しいブラウザタブで `https://customvision.ai` にアクセスし、Azure サブスクリプションに関連付けられた Microsoft アカウントでサインインします。
-2. 次の設定で新しいプロジェクトを作成します：
+2. 次の設定で新しいプロジェクトを作成します。
     - **Name**: Detect Fruit
     - **Description**: Object Detection
     - **Resource**: *前に作成したカスタムビジョンリソース*
     - **Project Type**: Object Detection
     - **Domains**: General
   
-    ![Create new custom vision project](./img/create-new-custom-vision-project.png)
+    ![Create new custom vision project](../media/03/create-new-custom-vision-project.png)
 3. プロジェクトが作成され、ブラウザで開かれるのを待ちます。
 
 ## 画像を追加してタグを付ける
@@ -62,9 +62,9 @@ lab:
 1. Visual Studio Code で、リポジトリをクローンした **03-object-detection/training-images** フォルダーにあるトレーニング画像を表示します。このフォルダーには果物の画像が含まれています。
 2. カスタムビジョンポータルで、オブジェクト検出プロジェクト内の **Add images** を選択し、フォルダー内のすべての画像をアップロードします。
 
-    ![Add images 1](./img/custom_vision_portal_upload_images_1.png)
+    ![Add images 1](../media/03/custom_vision_portal_upload_images_1.png)
 
-    ![Add images 2](./img/custom_vision_portal_upload_images_2.png)
+    ![Add images 2](../media/03/custom_vision_portal_upload_images_2.png)
 
 3. 画像がアップロードされたら、最初の画像を選択して開きます。
 4. 画像内の任意のオブジェクトにマウスをかざすと、自動的に検出された領域が表示されます（下の画像のように）。次にオブジェクトを選択し、必要に応じて領域を調整して囲みます。
@@ -95,15 +95,15 @@ lab:
 
 1. カスタムビジョンポータルの **Training Images** ページの右上にある *設定* (&#9881;) アイコンをクリックして、プロジェクト設定を表示します。
 
-    ![Setting Icon](./img/setting_icon.png)
+    ![Setting Icon](../media/03/setting_icon.png)
 
 2. 左側の **General** のセクションに、このプロジェクトを一意に識別する **Project Id** が表示されていることを確認します。
 
-    ![Project ID](./img/project_setting_project_id.png)
+    ![Project ID](../media/03/project_setting_project_id.png)
 
 3. 右側の **Resources:** の下に、キーとエンドポイントが表示されていることを確認します。これらは *トレーニング* リソースの詳細です（Azure ポータルでリソースを表示してもこの情報を取得できます）。
 
-    ![Key & Endpoint](./img/project_setting_key_and_endpoint.png)
+    ![Key & Endpoint](../media/03/project_setting_key_and_endpoint.png)
 
 4. Visual Studio Code で、**03-object-detection** フォルダーの下にある **C-Sharp** または **Python** フォルダーを展開します（使用する言語に応じて選択してください）。
 5. **train-detector** フォルダーを右クリックして、統合ターミナルを開きます。次に、使用する言語に応じて以下のコマンドを実行して、カスタムビジョントレーニングパッケージをインストールしてください。
@@ -127,16 +127,16 @@ pip install azure-cognitiveservices-vision-customvision==3.1.1
     設定ファイルを開き、カスタムビジョンの **トレーニング** リソースのエンドポイントとキー、および先ほど作成したオブジェクト検出プロジェクトのプロジェクトIDを反映するように設定値を変更します。変更したら設定ファイルを保存してください。
 
     *設定例(C#, appsettings.json)*
-    ![appsettings.json](./img/appsettings_json.png)
+    ![appsettings.json](../media/03/appsettings_json.png)
 
     *設定例(Python, .env)*
-    ![.env](./img/dot_env.png)
+    ![.env](../media/03/dot_env.png)
 
 7. **train-detector** フォルダー内の **tagged-images.json** を開き、その中に含まれる JSON を確認します。この JSON には、1つ以上のタグ付き領域を含む画像のリストが定義されています。各タグ付き領域には、タグ名、バウンディングボックス（囲み枠）の上端と左端の座標、およびその幅と高さの寸法が含まれています。
 
     > **注意**: このファイルの座標と寸法は、画像上の相対的なポイントを示しています。例えば、*height* の値が 0.7 の場合、画像の高さの 70% のボックスを示します。一部のタグ付けツールは、座標と寸法の値をピクセル、インチ、または他の単位で表す形式のファイルを生成することがあります。
 
-    ![tagged-images.json](./img/tagged-images_json.png)
+    ![tagged-images.json](../media/03/tagged-images_json.png)
 
 8. **train-detector** フォルダーには、JSONファイルで参照されている画像ファイルが保存されているサブフォルダーが含まれていることを確認してください。
 
@@ -173,15 +173,15 @@ pip install azure-cognitiveservices-vision-customvision==3.1.1
 
 1. カスタムビジョンプロジェクトで、**Train** をクリックして、タグ付けされた画像を使ってオブジェクト検出モデルをトレーニングします。**Quick Training** オプションを選択します。
 
-    ![Start quick training](./img/start_quicktraining.png)
+    ![Start quick training](../media/03/start_quicktraining.png)
 
 2. トレーニングが完了するのを待ちます（約10分ほどかかることがあります）。その後、*Precision*（精度）、*Recall*（再現率）、および *mAP*（平均適合率）のパフォーマンス指標を確認します。これらは分類モデルの予測精度を測定するもので、すべて高い値であるべきです。
 
-    ![Result of Training](./img/cv_training_result.png)
+    ![Result of Training](../media/03/cv_training_result.png)
 
 3. ページの右上にある **Quick Test** をクリックし、**Image URL** ボックスに `https://aka.ms/apple-orange` と入力して生成された予測を確認します。その後、**Quick Test** ウィンドウを閉じます。
 
-    ![Result of Quick Test](./img/cv_result_of_quicktest.png)
+    ![Result of Quick Test](../media/03/cv_result_of_quicktest.png)
 
 ## オブジェクト検出モデルを公開する
 
@@ -191,15 +191,15 @@ pip install azure-cognitiveservices-vision-customvision==3.1.1
     - **Model Name**: fruit-detector
     - **Prediction resource**: *以前に作成した **Prediction** リソース（名前が "-Prediction" で終わるもの）*。
 
-      ![Publish Model](./img/cv_publish_model.png)
+      ![Publish Model](../media/03/cv_publish_model.png)
 
 2. **プロジェクト設定** ページの左上にある *プロジェクトギャラリー* (&#128065;) アイコンをクリックして、カスタムビジョンポータルのホームページに戻ります。ここにあなたのプロジェクトが表示されます。
 
-    ![CV Project garelly](./img/cv_project_garelly.png)
+    ![CV Project garelly](../media/03/cv_project_garelly.png)
 
 3. カスタムビジョンポータルのホームページの右上にある *設定* (&#9881;) アイコンをクリックして、カスタムビジョンサービスの設定を表示します。次に、**リソース** の下にある名前が "-Prediction" で終わる *予測* リソースを見つけ、その **キー** と **エンドポイント** の値を確認します（この情報は Azure ポータルでリソースを表示しても取得できます）。
 
-    ![CV-Settgings-Resources Key & Endpoint](./img/cv_settings_resources.png)
+    ![CV-Settgings-Resources Key & Endpoint](../media/03/cv_settings_resources.png)
 
 
 ## クライアントアプリケーションから画像分類モデルを使用する
@@ -248,7 +248,7 @@ python test-detector.py
 6. プログラムが完了したら、結果として生成された **output.jpg** ファイルを表示して、画像内で検出されたオブジェクトを確認してください。
 
 *output.jpg 出力結果*
-![output.jpg](./img/cv_test-detector_output.jpg)
+![output.jpg](../media/03/cv_test-detector_output.jpg)
 
 ## 詳細情報
 詳細については、[カスタムビジョンのドキュメント](https://docs.microsoft.com/azure/cognitive-services/custom-vision-service/)を参照してください。
