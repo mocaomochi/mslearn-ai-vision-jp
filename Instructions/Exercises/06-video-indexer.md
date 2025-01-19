@@ -1,131 +1,180 @@
 ---
 lab:
-    title: 'Analyze Video with Video Indexer'
-    module: 'Module 8 - Getting Started with Azure AI Vision'
+    title: '動画を分析する'
+    module: 'Module 8 - Azure AI Vision でコンピューター ビジョン ソリューションを作成する'
 ---
 
-# Analyze Video with Video Indexer
+# Video Indexer で動画を分析する
 
-A large proportion of the data created and consumed today is in the format of video. **Azure AI Video Indexer** is an AI-powered service that you can use to index videos and extract insights from them.
+昨今、制作および利用されるデータの大部分は動画形式となっています。**Azure AI Video Indexer** は、動画をインデックス化し、そこから分析情報を抽出するために使用できる AI 搭載のサービスです。
 
-> **Note**: From June 21st 2022, capabilities of Azure AI services that return personally identifiable information are restricted to customers who have been granted [limited access](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access). Without getting limited access approval, recognizing people and celebrities with Video Indexer for this lab is not available. For more details about the changes Microsoft has made, and why - see [Responsible AI investments and safeguards for facial recognition](https://azure.microsoft.com/blog/responsible-ai-investments-and-safeguards-for-facial-recognition/).
+> **注意**: 2022年6月21日以降、Azure AI サービスの機能で個人を特定できる情報を返すものは、[限定アクセス](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access)を許可された顧客に制限されています。限定アクセスの承認を得ないと、このラボで Video Indexer を使用して人や有名人を認識することはできません。Microsoft が行った変更とその理由の詳細については、[顔認識のための責任ある AI 投資と安全対策](https://azure.microsoft.com/blog/responsible-ai-investments-and-safeguards-for-facial-recognition/)をご覧ください。
 
-## Clone the repository for this course
+## このコースのリポジトリをクローンする
 
-If you have recently cloned **mslearn-ai-vision** code repository to the environment where you're working on this lab, open it in Visual Studio Code; otherwise, follow these steps to clone it now.
+まだ行っていない場合は、このコースのコードリポジトリをクローンしてください。
 
-1. Start Visual Studio Code.
-2. Open the palette (SHIFT+CTRL+P) and run a **Git: Clone** command to clone the `https://github.com/MicrosoftLearning/mslearn-ai-vision` repository to a local folder (it doesn't matter which folder).
-3. When the repository has been cloned, open the folder in Visual Studio Code.
-4. Wait while additional files are installed to support the C# code projects in the repo.
+1. Visual Studio Codeを起動します。
+2. パレット（SHIFT+CTRL+P）を開き、**Git: Clone**コマンドを実行して、`https://github.com/MicrosoftLearning/mslearn-ai-vision`リポジトリをローカルフォルダーにクローンします（フォルダーはどこでも構いません）。
+3. リポジトリがクローンされたら、Visual Studio Codeでフォルダーを開きます。
+4. リポジトリ内のC#コードプロジェクトをサポートするために追加のファイルがインストールされるのを待ちます。
 
-    > **Note**: If you are prompted to add required assets to build and debug, select **Not Now**.
+    > **注意**: ビルドとデバッグに必要なアセットを追加するように求められた場合は、**Not Now**を選択します。*Detected an Azure Function Project in folder*というメッセージが表示された場合は、そのメッセージを安全に閉じることができます。
 
-## Upload a video to Video Indexer
+## 動画を Video Indexer にアップロードする
 
-First, you'll need to sign into the Video Indexer portal and upload a video.
+まず、Video Indexer ポータルにサインインして動画をアップロードします。
 
-> **Tip**: If the Video Indexer page is slow to load in the hosted lab environment, use your locally installed browser. You can switch back to the hosted VM for the later tasks.
+> **ヒント**: ホストされたラボ環境で Video Indexer ページの読み込みが遅い場合は、ローカルにインストールされたブラウザーを使用してください。後のタスクでは再びホストされた VM に戻ることができます。
 
-1. In your browser, open the Video Indexer portal at `https://www.videoindexer.ai`.
-2. If you have an existing Video Indexer account, sign in. Otherwise, sign up for a free account and sign in using your Microsoft account (or any other valid account type). If you have difficulty signing in, try opening a private browser session.
-3. In a new tab, download the Responsible AI video by visiting `https://aka.ms/responsible-ai-video`. Save the file.
-4. In Video Indexer, select the **Upload** option. Then select the option to **Browse for files**, select the downloaded video, and click **Add**. Change the default name to **Responsible AI**, review the default settings, select the checkbox to verify compliance with Microsoft's policies for facial recognition, and upload the file.
-5. After the file has uploaded, wait a few minutes while Video Indexer automatically indexes it.
+1. ブラウザーで Video Indexer ポータルを開きます: `https://www.videoindexer.ai`
+2. 既存の Video Indexer アカウントがある場合はサインインします。ない場合は、無料アカウントにサインアップし、Microsoft アカウント（または他の有効なアカウント）でサインインします。サインインに問題がある場合は、プライベートブラウザセッションを試してください。
 
-> **Note**: In this exercise, we're using this video to explore Video Indexer functionality; but you should take the time to watch it in full when you've finished the exercise as it contains useful information and guidance for developing AI-enabled applications responsibly! 
+    ![Sign in to Videoindexer](../media/06/sign_in_to_videoindexer.png)
 
-## Review video insights
+3. 新しいタブで `https://aka.ms/responsible-ai-video` にアクセスして Responsible AI ビデオをダウンロードします。ファイルを保存します。
+4. Video Indexer で **アップロード** オプションを選択します。次に **ファイルを参照** オプションを選択し、ダウンロードしたビデオを選択して **追加** をクリックします。デフォルトの名前を **Responsible AI** に変更し、デフォルト設定を確認し、Microsoft の顔認識ポリシーに準拠していることを確認するチェックボックスを選択して、ファイルをアップロードします。
 
-The indexing process extracts insights from the video, which you can view in the portal.
+    ![アップロード](../media/06/upload_video.png)
+    ![ファイルの参照](../media/06/find_a_upload_video_file.png)
+    ![ファイル名を変更](../media/06/upload_and_make_index.png)
+    ![ポリシーに同意](../media/06/agree_to_policy.png)
 
-1. In the Video Indexer portal, when the video is indexed, select it to view it. You'll see the video player alongside a pane that shows insights extracted from the video.
+5. ファイルのアップロードが完了したら、Video Indexer が自動的にインデックスを作成するまで数分待ちます。
+   
+    ![アップロード完了とインデックスの作成](../media/06/video_uploaded_and_indexing.png)
 
-    > **Note**: Due to the limited access policy to protect individuals identities, you may not see names when you index the video.
+> **注意**: この演習では、Video Indexer の機能を探るためにこのビデオを使用しますが、演習が終わったらビデオを最後まで視聴してください。AI を活用したアプリケーションを責任を持って開発するための有用な情報とガイダンスが含まれています！
 
-![Video Indexer with a video player and Insights pane](../media/video-indexer-insights.png)
+## 動画のインサイトを確認する
 
-2. As the video plays, select the **Timeline** tab to view a transcript of the video audio.
+インデックス作成プロセスは、動画からインサイトを抽出し、ポータルで確認できます。
 
-![Video Indexer with a video player and Timeline pane showing the video transcript.](../media/video-indexer-transcript.png)
+1. Video Indexer ポータルで動画がインデックス化されたら、それを選択して表示します。動画プレーヤーの横に、動画から抽出された分析情報を表示するペインが表示されます。
 
-3. At the top right of the portal, select the **View** symbol (which looks similar to &#128455;), and in the list of insights, in addition to **Transcript**, select **OCR** and **Speakers**.
+    > **注意**: 個人の識別情報を保護するための限定アクセスポリシーにより、動画をインデックス化しても名前が表示されない場合があります。
 
-![Video Indexer view menu with Transcript, OCR, and Speakers selected](../media/video-indexer-view-menu.png)
+    ![Video Indexer の動画プレーヤーと分析情報ペイン](../media/06/video-indexer-insights.png)
 
-4. Observe that the **Timeline** pane now includes:
-    - Transcript of audio narration.
-    - Text visible in the video.
-    - Indications of speakers who appear in the video. Some well-known people are  automatically recognized by name, others are indicated by number (for example *Speaker #1*).
-5. Switch back to the **Insights** pane and view the insights show there. They include:
-    - Individual people who appear in the video.
-    - Topics discussed in the video.
-    - Labels for objects that appear in the video.
-    - Named entities, such as people and brands that appear in the video.
-    - Key scenes.
-6. With the **Insights** pane visible, select the **View** symbol again, and in the list of insights, add **Keywords** and **Sentiments** to the pane.
+2. 動画が再生されている間に、**Timeline (タイムライン)** タブを選択して、動画の音声の文字起こしを表示します。
+    ![Video Indexerの動画プレーヤーとタイムラインペインに表示された動画の文字起こし](../media/06/video-indexer-transcript.png)
 
-    The insights found can help you determine the main themes in the video. For example, the **topics** for this video show that it is clearly about technology, social responsibility, and ethics.
+3. ポータルの右上にある **分析情報の表示** アイコン（&#128455;のような形）を選択し、インサイトのリストで **トランスクリプト** に加えて **OCR** と **話者** を選択します。
+
+    ![Video Indexer の表示メニューで トランスクリプト、OCR、話者を選択する](../media/06/video-indexer-view-menu.png)
+
+4. **タイムライン** ペインには次の内容が含まれます:
+    - 音声ナレーションの文字起こし
+    - 動画内で見えるテキスト
+    - 動画に登場する話者：一部の有名な人は名前で自動的に認識され、他の人は番号（例：*話者 #1*）で表示されます。
+5. **分析情報** ペインに戻り、表示されているインサイトを確認します。これには次の内容が含まれます:
+    - 動画に登場する個々の人物
+    - 動画で話されているトピック
+    - 動画に登場するオブジェクトのラベル
+    - 動画に登場する人やブランドなどの名前付きエンティティ
+    - 重要なシーン
+6. **分析情報** ペインを表示した状態で、再度 **分析情報の表示** アイコンを選択し、分析情報分析のリストで **キーワード** と **感情** をペインに追加します。
+
+    見つかったインサイトは、動画の主要なテーマを把握するのに役立ちます。例えば、この動画の **トピック** は、Environment, Education, Technologyについての内容であることが明確に示されています。
 
 ## Search for insights
+Video Indexer を使って動画のインサイトを検索することができます。
 
-You can use Video Indexer to search the video for insights.
+1. **インサイト** ペインの **検索** ボックスに「Bee」と入力します。インサイト ペインをスクロールして、すべての種類のインサイトの結果を確認してください。
+2. 1つの一致する *ラベル* が見つかり、その位置が動画の下に表示されます。
+3. 蜂がいることが示されているセクションの始まりを選択し、その時点で動画を再生します（動画を一時停止して慎重に選択する必要があるかもしれません - 蜂は一瞬しか現れません！）
+4. **検索** ボックスをクリアして、動画のすべてのインサイトを表示します。
 
-1. In the **Insights** pane, in the **Search** box, enter *Bee*. You may need to scroll down in the Insights pane to see results for all types of insight.
-2. Observe that one matching *label* is found, with its location in the video indicated beneath.
-3. Select the beginning of the section where the presence of a bee is indicated, and view the video at that point (you may need to pause the video and select carefully - the bee only appears briefly!)
-4. Clear the **Search** box to show all insights for the video.
+    ![Video Indexer search results for Bee](../media/06/video-indexer-search.png)
 
-![Video Indexer search results for Bee](../media/video-indexer-search.png)
+## Video Indexer ウィジェットを使用する
 
-## Use Video Indexer widgets
+Video Indexer ポータルは、動画のインデックス作成プロジェクトを管理するための便利なインターフェースです。しかし、Video Indexer アカウントにアクセスできない人々にも動画とそのインサイトを提供したい場合があります。Video Indexer は、この目的のためにウェブページに埋め込むことができるウィジェットを提供しています。
 
-The Video Indexer portal is a useful interface to manage video indexing projects. However, there may be occasions when you want to make the video and its insights available to people who don't have access to your Video Indexer account. Video Indexer provides widgets that you can embed in a web page for this purpose.
+1. Visual Studio Code で、**06-video-indexer** フォルダー内の **analyze-video.html** を開きます。このファイルは Video Indexer の **Player** と **Insights** ウィジェットを追加するための基本的な HTML ページです。ヘッダーにある **vb.widgets.mediator.js** スクリプトの参照に注意してください。このスクリプトは、ページ上の複数の Video Indexer ウィジェットが相互に連携するために使用されます。
 
-1. In Visual Studio Code, in the **06-video-indexer** folder, open **analyze-video.html**. This is a basic HTML page to which you will add the Video Indexer **Player** and **Insights** widgets. Note the reference to the **vb.widgets.mediator.js** script in the header - this script enables multiple Video Indexer widgets on the page to interact with one another.
-2. In the Video Indexer portal, return to the **Media files** page and open your **Responsible AI** video.
-3. Under the video player, select **&lt;/&gt; Embed** to view the HTML iframe code to embed the widgets.
-4. In the **Share and Embed** dialog box, select the **Player** widget, set the video size to 560 x 315, and then copy the embed code to the clipboard.
-5. In Visual Studio Code, in the **analyze-video.html** file, paste the copied code under the comment **&lt;-- Player widget goes here -- &gt;**.
-6. Back in the **Share and Embed** dialog box, select the **Insights** widget and then copy the embed code to the clipboard. Then close the **Share and Embed** dialog box, switch back to Visual Studio Code, and paste the copied code under the comment **&lt;-- Insights widget goes here -- &gt;**.
-7. Save the file. Then in the **Explorer** pane, right-click **analyze-video.html** and select **Reveal in File Explorer**.
-8. In File Explorer, open **analyze-video.html** in your browser to see the web page.
-9. Experiment with the widgets, using the **Insights** widget to search for insights and jump to them in the video.
+    ![analyze-video.htmlファイル](../media/06/vs_code_analyze-video-html.png)
 
-![Video Indexer widgets in a web page](../media/video-indexer-widgets.png)
+2. Video Indexer ポータルで、**メディアファイル** ページに戻り、**Responsible AI** ビデオを開きます。
+3. ビデオプレーヤーの下にある **&lt;/&gt; 埋め込み** を選択して、ウィジェットを埋め込むための HTML iframe コードを表示します。
+4. **共有と埋め込み** ダイアログボックスで、**プレーヤー** ウィジェットを選択し、ビデオのサイズを 560 x 315 に設定して、埋め込みコードをクリップボードにコピーします。
 
-## Use the Video Indexer REST API
+    ![プレイヤーウィジェトのコードをコピー](../media/06/copy_player_widget_code.png)
 
-Video Indexer provides a REST API that you can use to upload and manage videos in your account.
+5. Visual Studio Code の **analyze-video.html** ファイルで、コメント **&lt;-- Player widget goes here --&gt;** の下にコピーしたコードを貼り付けます。
+   
+    ![Playerコードを貼り付け](../media/06/paste_player_widget_code.png)
 
-### Get your API details
+6. **共有と埋め込み** ダイアログボックスに戻り、**Insights** ウィジェットを選択して、埋め込みコードをクリップボードにコピーします。ダイアログボックスを閉じ、Visual Studio Code に戻って、コメント **&lt;-- Insights widget goes here --&gt;** の下にコピーしたコードを貼り付けます。
 
-To use the Video Indexer API, you need some information to authenticate requests:
+    ![分析情報ウィジェットのコードをコピー](../media/06/copy_insights_widget_code.png)
 
-1. In the Video Indexer portal, expand the left pane and select the **Account settings** page.
-2. Note the **Account ID** on this page - you will need it later.
-3. Open a new browser tab and go to the Video Indexer developer portal at `https://api-portal.videoindexer.ai`, signing in using the credentials for your Video Indexer account.
-4. On the **Profile** page, view the **Subscriptions** associated with your profile.
-5. On the page with your subscription(s), observe that you have been assigned two keys (primary and secondary) for each subscription. Then select **Show** for any of the keys to see it. You will need this key shortly.
+    ![分析情報ウィジェットのコードを貼り付け](../media/06/paste_insights_widget_code.png)
 
-### Use the REST API
+7. ファイルを保存します。次に、**エクスプローラー** ペインで **analyze-video.html** を右クリックし、Windowsの場合は**ファイルエクスプローラーで表示します**、MacOSの場合は **Finderで表示します** を選択します。
 
-Now that you have the account ID and an API key, you can use the REST API to work with videos in your account. In this procedure, you'll use a PowerShell script to make REST calls; but the same principles apply with HTTP utilities such as cURL or Postman, or any programming language capable of sending and receiving JSON over HTTP.
+    ![ファイルエクスプローラーまたはFinderで表示](../media/06/open_with_finder.png)
 
-All interactions with the Video Indexer REST API follow the same pattern:
+8. **analyze-video.html** をブラウザーで開き、ウェブページを確認します。
 
-- An initial request to the **AccessToken** method with the API key in the header is used to obtain an access token.
-- Subsequent requests use the access token to authenticate when calling REST methods to work with videos.
+    ![HTMLを表示](../media/06/open_analyze-video-html_with_browser.png)
 
-1. In Visual Studio Code, in the **06-video-indexer** folder, open **get-videos.ps1**.
-2. In the PowerShell script, replace the **YOUR_ACCOUNT_ID** and **YOUR_API_KEY** placeholders with the account ID and API key values you identified previously.
-3. Observe that the *location* for a free account is "trial". If you have created an unrestricted Video Indexer account (with an associated Azure resource), you can change this to the location where your Azure resource is provisioned (for example "eastus").
-4. Review the code in the script, noting that invokes two REST methods: one to get an access token, and another to list the videos in your account.
-5. Save your changes, and then at the top-right of the script pane, use the **&#9655;** button to run the script.
-6. View the JSON response from the REST service, which should contain details of the **Responsible AI** video you indexed previously.
+9. ウィジェットを使ってみて、**Insights** ウィジェットを使ってインサイトを検索し、ビデオ内の該当箇所にジャンプします。
 
-## More information
+    ![Video Indexer widgets in a web page](../media/06/video-indexer-widgets.png)
 
-Recognition of people and celebrities is still available, but following the [Responsible AI Standard](https://aka.ms/aah91ff) those are restricted behind a Limited Access policy. These features include facial identification and celebrity recognition. To learn more and apply for access, see the [Limited Access for Azure AI Services](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access).
+## Video Indexer REST API を使用する
 
-For more information about **Video Indexer**, see the [Video Indexer documentation](https://learn.microsoft.com/azure/azure-video-indexer/).
+Video Indexer は、REST API を提供しており、これを使用してアカウント内の動画をアップロードおよび管理することができます。
+
+### API 詳細情報を取得する
+
+Video Indexer API を使用するには、リクエストを認証するための情報が必要です。
+
+1. Video Indexer ポータルで、左側のペインを展開し、**アカウント設定** ページを選択します。
+2. このページに表示されている **アカウント ID** をメモしておきます。後で必要になります。
+
+    ![アカウント設定](../media/06/account_settings.png)
+
+3. 新しいブラウザタブを開き、`https://api-portal.videoindexer.ai` の Video Indexer 開発者ポータルにアクセスし、Video Indexer アカウントの資格情報を使用してサインインします。
+
+    ![Video Indexer 開発者ポータル](../media/06/video_indexer_developer_portal.png)
+
+4. **Profile** ページで、あなたのプロフィールに関連付けられている **サブスクリプション** を確認します。
+5. サブスクリプションのページで、各サブスクリプションに対してプライマリキーとセカンダリキーの2つのキーが割り当てられていることを確認します。任意のキーの **Show (表示)** を選択してキーを表示します。このキーは後で必要になります。
+
+    ![プロフィールページからキーの取得](../media/06/user-profile.png)
+
+### REST API を使用する
+
+アカウント ID と API キーを取得したので、REST API を使用してアカウント内の動画を操作できます。この手順では、PowerShell スクリプトを使用して REST 呼び出しを行いますが、cURL や Postman などの HTTP ユーティリティ、または HTTP 経由で JSON を送受信できる任意のプログラミング言語でも同じ原則が適用されます。
+
+Video Indexer REST API とのすべてのやり取りは同じパターンになります。
+
+- 最初のリクエストで、API キーをヘッダーに含めて **AccessToken** メソッドを呼び出し、アクセストークンを取得します。
+- その後のリクエストでは、アクセストークンを使用して認証し、REST メソッドを呼び出して動画を操作します。
+
+1. Visual Studio Code で、**06-video-indexer** フォルダー内の **get-videos.ps1** を開きます。Mac OSの場合は **get-videos.sh**を開いてください。
+
+2. スクリプト内の **YOUR_ACCOUNT_ID** と **YOUR_API_KEY** のプレースホルダーを、先ほど確認したアカウント ID と API キーの値に置き換えます。
+3. 無料アカウントの *location* は "trial" です。制限のない Video Indexer アカウント（関連する Azure リソースを持つ）を作成した場合は、Azure リソースがプロビジョニングされている場所（例: "eastus"）に変更できます。
+4. スクリプト内のコードを確認し、2 つの REST メソッドを呼び出していることに注意してください。1 つはアクセストークンを取得するためのもので、もう 1 つはアカウント内の動画をリストするためのものです。
+
+    *get-videos.ps1*
+    ![get-videos.ps1](../media/06/get-videos-ps1.png)
+
+    *get-videos.sh*
+    ![get-videos.sh](../media/06/get-videos-sh.png)
+
+
+5. 変更を保存し、スクリプトペインの右上にある **&#9655;** ボタンを使用してスクリプトを実行します。
+6. REST サービスからの JSON レスポンスを表示し、以前にインデックス化した **Responsible AI** 動画の詳細が含まれていることを確認します。
+
+    *実行結果の一部*
+    ![JSONレスポンス](../media/06/rest-api-result.png)
+
+## 詳細情報
+
+人や有名人の認識はまだ利用可能ですが、[責任ある AI 標準](https://aka.ms/aah91ff)に従って、これらは限定アクセスポリシーのもとで制限されています。これらの機能には、顔の識別や有名人の認識が含まれます。詳細を確認し、アクセスを申請するには、[Azure AI サービスの限定アクセス](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access)をご覧ください。
+
+**Video Indexer** についての詳細は、[Video Indexer ドキュメント](https://learn.microsoft.com/azure/azure-video-indexer/)を参照してください。
